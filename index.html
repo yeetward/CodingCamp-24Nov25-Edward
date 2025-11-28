@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="project.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-gray-200">
+    <div class="max-w-2xl mx-auto mt-8 p-6 border border-gray-400 rounded-xl bg-white shadow-md">
+
+    
+    <header class="title bolted mb-10 text-center">
+        <h1>My Todo List</h1>
+
+    </header>
+
+    <main>
+        <form id="todo-form">
+            <input type="text" id="todo-input" placeholder="Enter a new todo" required class="border-black border-2 p-2 rounded-lg">
+            
+            <input type="date" id="datetime-input" class="border-black border-2 p-2 rounded-lg">
+            <button type="button" class="border-black border-2 p-2 hover:bg-gray-200 rounded-lg bg-green-500 active:scale-95 active:bg-blue-700 transition" >Add Todo</button>
+            
+            
+        </form>
+        <br>
+        <form id="filter-form">
+            <input type="text" id="filter-task-input" placeholder="Search by task" class="border-black border-2 p-2 rounded-lg">
+            <input type="date" id="filter-date-input" class="border-black border-2 p-2 rounded-lg">
+            <button type="button" id="filter-button" class="border-black border-2 p-2 rounded-lg bg-yellow-500 hover:bg-gray-200 active:scale-95 active:bg-blue-700 transition">Filter</button>
+            <button type="button" id="clear-filter-button" class="clear-filter-buttons hover:bg-gray-200 border-black border-2 p-2 rounded-lg bg-red-500 active:scale-95 active:bg-blue-700 transition">Delete All</button>
+        </form>    
+        
+        <table id="todo-table" class="min-w-full border border-gray-300">
+    <thead class="bg-gray-100">
+            <tr>
+                <th class="border border-gray-300 px-3 py-2">Todo</th>
+                <th class="border border-gray-300 px-3 py-2">Date</th>
+                <th class="border border-gray-300 px-3 py-2">Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Todo items will be added here dynamically -->
+        </tbody>
+    </table>
+
+
+    </main>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 My Todo App</p>
+    </footer>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
