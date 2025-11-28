@@ -132,8 +132,7 @@ function renderFilteredTodos(list) {
     });
 }
 
-// Hook up the filter button
-document.getElementById('filter-button').addEventListener('click', filterTodos);
+
 
 
 
