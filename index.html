@@ -37,11 +37,26 @@
             <input type="date" id="filter-date-input" class="border-black border-2 p-2 rounded-lg">
             <button type="button" id="filter-button" onclick="filterTodos()" class="border-black border-2 p-2 rounded-lg bg-yellow-500 hover:bg-gray-200 active:scale-95 active:bg-blue-700 transition">Filter</button>
             <button type="button" id="clear-filter-button" onclick="clearTodos();" class="clear-filter-buttons hover:bg-gray-200 border-black border-2 p-2 rounded-lg bg-red-500 active:scale-95 active:bg-blue-700 transition">Delete All</button>
-        </form>    
+        </form> 
+
+        <!-- Add after the filter form, before the table -->
+        <div class="mt-4 mb-4 space-x-2">
+            <button type="button" onclick="markAllComplete()" 
+                    class="border border-gray-400 p-2 rounded-lg bg-green-500 text-white hover:bg-green-600 active:scale-95 transition">
+                ✓ Mark All Complete
+            </button>
+            <button type="button" onclick="clearCompleted()" 
+                    class="border border-gray-400 p-2 rounded-lg bg-orange-500 text-white hover:bg-orange-600 active:scale-95 transition">
+                🗑️ Clear Completed
+            </button>
+        </div>
+        
+        
         
         <table id="todo-table" class="min-w-full border border-gray-300">
     <thead class="bg-gray-100">
             <tr>
+                <th class="border border-gray-300 px-3 py-2">Status</th> 
                 <th class="border border-gray-300 px-3 py-2">Todo</th>
                 <th class="border border-gray-300 px-3 py-2">Date</th>
                 <th class="border border-gray-300 px-3 py-2">Delete</th>
@@ -59,6 +74,11 @@
     <footer>
         <p>&copy; 2025 My Todo App</p>
     </footer>
+
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1000.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/amazon-cognito-identity-js@5.2.10/dist/amazon-cognito-identity.min.js"></script>
+    <script src="auth-config.js"></script>
+    <script src="cognito-auth.js"></script>
 
     <script src="script.js"></script>
 

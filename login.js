@@ -1,116 +1,80 @@
-// login.js
+// login.js - Updated for Cognito
 document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('login-form');
     const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
     const errorMessage = document.getElementById('error-message');
-    
-    // Test credentials (you can change these)
-    const VALID_EMAIL = 'admin123@gmail.com';
-    const VALID_PASSWORD = 'admin123';
-    
-    // Form submission handler
-    loginForm.addEventListener('submit', function(event) {
+    const loginBtn = document.getElementById('login-btn');
+
+    // Form submission
+    loginForm.addEventListener('submit', async function(event) {
         event.preventDefault();
         
-        // Get values
         const email = emailInput.value.trim();
         const password = passwordInput.value.trim();
         
-        // Reset error
-        hideError();
-        
-        // Validation
+        // Basic validation
         if (!email || !password) {
-            showError('Please fill in all fields');
+            showError('Please enter both email and password');
             return;
         }
         
-        if (!isValidEmail(email)) {
-            showError('Please enter a valid email address');
+        if (!email.includes('@')) {
+            showError('Please enter a valid email');
             return;
         }
         
-        if (password.length < 6) {
-            showError('Password must be at least 6 characters');
-            return;
-        }
+        // Show loading
+        loginBtn.textContent = 'Signing in...';
+        loginBtn.disabled = true;
         
-        // Check credentials
-        if (email === VALID_EMAIL && password === VALID_PASSWORD) {
-            loginSuccess();
-        } else {
-            showError('Invalid email or password. Try: admin123@gmail.com / admin123');
+        try {
+            // Try to sign in with Cognito
+            await CognitoAuth.signIn(email, password);
+            
+            // Success!
+            showSuccess('Login successful! Redirecting...');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+            
+        } catch (error) {
+            console.error('Cognito error:', error);
+            
+            // User-friendly error messages
+            let errorMsg = 'Login failed. ';
+            if (error.message.includes('UserNotFoundException')) {
+                errorMsg = 'User not found. Please check your email or sign up first.';
+            } else if (error.message.includes('NotAuthorizedException')) {
+                errorMsg = 'Incorrect password. Please try again.';
+            } else if (error.message.includes('UserNotConfirmedException')) {
+                errorMsg = 'Please check your email to confirm your account first.';
+            } else {
+                errorMsg += error.message || 'Please try again later.';
+            }
+            
+            showError(errorMsg);
+            
+            // Reset button
+            loginBtn.textContent = 'Sign In';
+            loginBtn.disabled = false;
         }
     });
     
-    // Email validation function
-    function isValidEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    }
-    
-    // Show error message
+    // Helper functions
     function showError(message) {
         errorMessage.textContent = message;
+        errorMessage.className = 'block bg-red-50 text-red-700 p-3 rounded border border-red-200';
         errorMessage.classList.remove('hidden');
-        errorMessage.classList.add('block');
         
         // Shake animation
         loginForm.classList.add('shake');
-        setTimeout(() => {
-            loginForm.classList.remove('shake');
-        }, 500);
+        setTimeout(() => loginForm.classList.remove('shake'), 500);
     }
     
-    // Hide error message
-    function hideError() {
-        errorMessage.classList.add('hidden');
-        errorMessage.classList.remove('block');
-        errorMessage.textContent = '';
+    function showSuccess(message) {
+        errorMessage.textContent = message;
+        errorMessage.className = 'block bg-green-50 text-green-700 p-3 rounded border border-green-200';
+        errorMessage.classList.remove('hidden');
     }
-    
-    // Successful login
-    function loginSuccess() {
-        // Show success message
-        errorMessage.textContent = 'Login successful! Redirecting...';
-        errorMessage.classList.remove('hidden', 'bg-red-50', 'text-red-700');
-        errorMessage.classList.add('block', 'bg-green-50', 'text-green-700');
-        
-        // Change button text
-        const submitBtn = loginForm.querySelector('button[type="submit"]');
-        submitBtn.textContent = 'Success!';
-        submitBtn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
-        submitBtn.classList.add('bg-green-600', 'hover:bg-green-700');
-        submitBtn.disabled = true;
-        
-        // Redirect to todo app after 1.5 seconds
-        setTimeout(() => {
-            window.location.href = 'index.html';
-        }, 1500);
-        
-        // Store login state in localStorage (optional)
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('userEmail', emailInput.value);
-    }
-    
-    // Add shake animation CSS
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
-        }
-        .shake {
-            animation: shake 0.5s ease-in-out;
-        }
-    `;
-    document.head.appendChild(style);
-    
-    // Auto-fill test credentials on double-click (for testing)
-    emailInput.addEventListener('dblclick', function() {
-        emailInput.value = VALID_EMAIL;
-        passwordInput.value = VALID_PASSWORD;
-    });
 });
